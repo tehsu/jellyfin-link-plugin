@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Link</title>
+</head>
+<body>
+    <div id="LinkConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox">
+        <div data-role="content">
+            <div class="content-primary">
+                <form id="LinkConfigForm">
+                    <div class="verticalSection">
+                        <h2>Link</h2>
+                        <p>
+                            Adds a dedicated device linking page at <code>/Link</code>, in the style of
+                            plex.tv/link. Visitors sign in with their server account, then enter the code
+                            shown on a TV, phone, or other device to link it &mdash; powered by Jellyfin's
+                            built-in Quick Connect.
+                        </p>
+                        <p>
+                            Your link page: <a id="linkPageUrl" href="#" target="_blank" rel="noopener"></a>
+                        </p>
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="txtPageTitle">Page heading</label>
+                        <input is="emby-input" type="text" id="txtPageTitle" />
+                        <div class="fieldDescription">Shown above the sign-in form on the /Link page.</div>
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="txtAccentColor">Accent color</label>
+                        <input is="emby-input" type="text" id="txtAccentColor" placeholder="#e5a00d" />
+                        <div class="fieldDescription">Hex color used for buttons and highlights on the /Link page.</div>
+                    </div>
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        (function () {
+            var pluginUniqueId = "3cf8ee31-4bee-4afa-b838-b8df49dfeb90";
+
+            document.querySelector("#LinkConfigPage")
+                .addEventListener("pageshow", function () {
+                    Dashboard.showLoadingMsg();
+
+                    var linkUrl = ApiClient.serverAddress() + "/Link";
+                    var linkAnchor = document.querySelector("#linkPageUrl");
+                    linkAnchor.textContent = linkUrl;
+                    linkAnchor.href = linkUrl;
+
+                    ApiClient.getPluginConfiguration(pluginUniqueId).then(function (config) {
+                        document.querySelector("#txtPageTitle").value = config.PageTitle || "";
+                        document.querySelector("#txtAccentColor").value = config.AccentColor || "";
+                        Dashboard.hideLoadingMsg();
+                    });
+                });
+
+            document.querySelector("#LinkConfigForm")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    Dashboard.showLoadingMsg();
+
+                    ApiClient.getPluginConfiguration(pluginUniqueId).then(function (config) {
+                        config.PageTitle = document.querySelector("#txtPageTitle").value;
+                        config.AccentColor = document.querySelector("#txtAccentColor").value;
+
+                        ApiClient.updatePluginConfiguration(pluginUniqueId, config).then(function (result) {
+                            Dashboard.processPluginConfigurationUpdateResult(result);
+                        });
+                    });
+
+                    return false;
+                });
+        })();
+    </script>
+</body>
+</html>
