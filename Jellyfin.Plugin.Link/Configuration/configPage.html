@@ -11,7 +11,7 @@
                     <div class="verticalSection">
                         <h2>Link</h2>
                         <p>
-                            Adds a dedicated device linking page at <code>/Link</code>, in the style of
+                            Adds a dedicated device linking page at <code>/link</code>, in the style of
                             plex.tv/link. Visitors sign in with their server account, then enter the code
                             shown on a TV, phone, or other device to link it &mdash; powered by Jellyfin's
                             built-in Quick Connect.
@@ -23,12 +23,12 @@
                     <div class="inputContainer">
                         <label class="inputLabel inputLabelUnfocused" for="txtPageTitle">Page heading</label>
                         <input is="emby-input" type="text" id="txtPageTitle" />
-                        <div class="fieldDescription">Shown above the sign-in form on the /Link page.</div>
+                        <div class="fieldDescription">Shown above the sign-in form on the /link page.</div>
                     </div>
                     <div class="inputContainer">
                         <label class="inputLabel inputLabelUnfocused" for="txtAccentColor">Accent color</label>
                         <input is="emby-input" type="text" id="txtAccentColor" placeholder="#e5a00d" />
-                        <div class="fieldDescription">Hex color used for buttons and highlights on the /Link page.</div>
+                        <div class="fieldDescription">Hex color used for buttons and highlights on the /link page.</div>
                     </div>
                     <div>
                         <button is="emby-button" type="submit" class="raised button-submit block emby-button">
@@ -47,7 +47,7 @@
                 .addEventListener("pageshow", function () {
                     Dashboard.showLoadingMsg();
 
-                    var linkUrl = ApiClient.serverAddress() + "/Link";
+                    var linkUrl = ApiClient.serverAddress() + "/link";
                     var linkAnchor = document.querySelector("#linkPageUrl");
                     linkAnchor.textContent = linkUrl;
                     linkAnchor.href = linkUrl;

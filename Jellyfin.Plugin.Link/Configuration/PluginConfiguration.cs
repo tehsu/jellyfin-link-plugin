@@ -17,12 +17,12 @@ public class PluginConfiguration : BasePluginConfiguration
     }
 
     /// <summary>
-    /// Gets or sets the heading shown at the top of the /Link page.
+    /// Gets or sets the heading shown at the top of the /link page.
     /// </summary>
     public string PageTitle { get; set; }
 
     /// <summary>
-    /// Gets or sets the accent color (hex) used to style the /Link page.
+    /// Gets or sets the accent color (hex) used to style the /link page.
     /// </summary>
     public string AccentColor { get; set; }
 }

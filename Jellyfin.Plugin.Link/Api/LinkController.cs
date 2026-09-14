@@ -13,7 +13,7 @@ namespace Jellyfin.Plugin.Link.Api;
 /// </summary>
 [ApiController]
 [AllowAnonymous]
-[Route("Link")]
+[Route("link")]
 public class LinkController : ControllerBase
 {
     private static readonly Assembly _assembly = typeof(LinkController).Assembly;
@@ -55,7 +55,7 @@ public class LinkController : ControllerBase
     /// Gets the display configuration (title/accent color) for the device linking page.
     /// </summary>
     /// <returns>A small JSON payload consumed by link.js.</returns>
-    [HttpGet("Config")]
+    [HttpGet("config")]
     [Produces(MediaTypeNames.Application.Json)]
     public ActionResult<object> Config()
     {

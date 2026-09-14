@@ -9,7 +9,7 @@ into Settings inside the full web client. This plugin adds a single, clean,
 standalone page at:
 
 ```
-http://your-server:8096/Link
+http://your-server:8096/link
 ```
 
 Visitors:
@@ -94,7 +94,7 @@ Go to **Dashboard &rsaquo; Plugins &rsaquo; My Plugins** — you should see
 ### 6. Visit the page
 
 ```
-http://your-server:8096/Link
+http://your-server:8096/link
 ```
 
 > **Note:** this repo doesn't yet publish a `manifest.json` plugin
@@ -114,10 +114,10 @@ The config page also shows the direct URL to share or bookmark.
 ## Notes
 
 - Quick Connect must be enabled on the server (Dashboard > General). If it's
-  off, the `/Link` page shows a message instead of the sign-in form.
+  off, the `/link` page shows a message instead of the sign-in form.
 - The page talks directly to the server's own API from the browser
   (`/Users/AuthenticateByName`, `/Users/Me`, `/QuickConnect/*`,
   `/System/Info/Public`) — there's no separate backend to configure.
-- Signing in on the `/Link` page stores an access token in that browser's
+- Signing in on the `/link` page stores an access token in that browser's
   `localStorage` so repeat visits skip straight to the code entry step.
   "Sign in as someone else" clears it.

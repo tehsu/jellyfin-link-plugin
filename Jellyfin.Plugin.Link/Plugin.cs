@@ -11,7 +11,7 @@ namespace Jellyfin.Plugin.Link;
 
 /// <summary>
 /// The Link plugin. Adds a dedicated, Plex.tv/link-style device linking page
-/// (served at <c>/Link</c>) that authorizes Jellyfin Quick Connect codes.
+/// (served at <c>/link</c>) that authorizes Jellyfin Quick Connect codes.
 /// </summary>
 public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
 {
@@ -34,7 +34,7 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
 
     /// <inheritdoc />
     public override string Description =>
-        "Adds a dedicated /Link page for pairing devices, in the style of plex.tv/link, backed by Jellyfin Quick Connect.";
+        "Adds a dedicated /link page for pairing devices, in the style of plex.tv/link, backed by Jellyfin Quick Connect.";
 
     /// <summary>
     /// Gets the current plugin instance.
