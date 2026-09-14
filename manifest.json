@@ -1,0 +1,20 @@
+[
+  {
+    "guid": "3cf8ee31-4bee-4afa-b838-b8df49dfeb90",
+    "name": "Link",
+    "description": "Adds a dedicated /link page to your Jellyfin server. Visitors sign in once with their server account, then enter the code shown on a TV, phone, or other device to link it instantly, no digging through settings menus required. Built on top of Jellyfin's existing Quick Connect feature.",
+    "overview": "A plex.tv/link-style device linking page for Jellyfin.",
+    "owner": "tehsu",
+    "category": "General",
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "targetAbi": "10.9.0.0",
+        "sourceUrl": "https://github.com/tehsu/jellyfin-link-plugin/releases/download/v1.0.0.0/link.zip",
+        "checksum": "6291740cb6fafff1524b757f948211f8",
+        "timestamp": "2026-09-14T08:21:11Z",
+        "changelog": "Initial release: standalone /link page, Quick Connect authorization, and an admin config page for branding."
+      }
+    ]
+  }
+]

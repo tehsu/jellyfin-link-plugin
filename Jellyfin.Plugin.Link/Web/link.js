@@ -76,7 +76,7 @@
   }
 
   function loadDisplayConfig() {
-    return fetch("/Link/Config")
+    return fetch("/link/config")
       .then(function (res) { return res.ok ? res.json() : {}; })
       .catch(function () { return {}; })
       .then(function (config) {
