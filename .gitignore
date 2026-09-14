@@ -1,0 +1,15 @@
+## .NET
+bin/
+obj/
+*.user
+
+## Editor/OS
+.vs/
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+## Packaging output
+artifacts/
+*.zip

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Link Your Device</title>
+<link rel="stylesheet" href="/Link/link.css" />
+</head>
+<body>
+  <main class="link-page">
+    <div class="link-card">
+      <div class="brand">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <h1 id="server-name">Jellyfin</h1>
+      </div>
+
+      <!-- Disabled state -->
+      <section id="step-disabled" class="step hidden">
+        <h2>Quick Connect is turned off</h2>
+        <p class="subtitle">
+          Ask your server administrator to enable Quick Connect under
+          Dashboard &rsaquo; General before you can link a device here.
+        </p>
+      </section>
+
+      <!-- Sign in -->
+      <section id="step-signin" class="step hidden">
+        <h2 id="signin-heading">Sign in to link your device</h2>
+        <p class="subtitle">Sign in with your server account to continue.</p>
+        <form id="signin-form" novalidate>
+          <label class="field">
+            <span>Username</span>
+            <input type="text" id="username" name="username" autocomplete="username" autocapitalize="off" autocorrect="off" required />
+          </label>
+          <label class="field">
+            <span>Password</span>
+            <input type="password" id="password" name="password" autocomplete="current-password" />
+          </label>
+          <button type="submit" class="btn btn-primary" id="signin-submit">
+            <span class="btn-label">Sign In</span>
+          </button>
+          <p class="error" id="signin-error" role="alert" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- Enter code -->
+      <section id="step-code" class="step hidden">
+        <h2>Link your device</h2>
+        <p class="subtitle">Enter the code shown on your TV, phone, or other device.</p>
+        <form id="code-form" novalidate>
+          <div class="code-inputs" id="code-inputs" aria-label="Linking code"></div>
+          <button type="submit" class="btn btn-primary" id="link-submit" disabled>
+            <span class="btn-label">Link</span>
+          </button>
+          <p class="error" id="code-error" role="alert" aria-live="polite"></p>
+        </form>
+        <p class="signed-in-as">
+          Signed in as <strong id="current-username"></strong> &middot;
+          <button type="button" class="btn-link" id="signout-btn">Sign in as someone else</button>
+        </p>
+      </section>
+
+      <!-- Success -->
+      <section id="step-success" class="step hidden">
+        <div class="checkmark" aria-hidden="true">
+          <svg viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="25" fill="none" />
+            <path fill="none" d="M14 27l7 7 17-17" />
+          </svg>
+        </div>
+        <h2>Device linked!</h2>
+        <p class="subtitle">You can go back to your other device now &mdash; it's ready to go.</p>
+        <button type="button" class="btn btn-secondary" id="link-another-btn">Link another device</button>
+      </section>
+    </div>
+  </main>
+  <script src="/Link/link.js"></script>
+</body>
+</html>

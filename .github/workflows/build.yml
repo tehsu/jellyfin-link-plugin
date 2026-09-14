@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore Jellyfin.Plugin.Link.sln
+
+      - name: Build
+        run: dotnet build Jellyfin.Plugin.Link.sln -c Release --no-restore
+
+      - name: Package
+        run: |
+          mkdir -p artifacts/Link
+          cp Jellyfin.Plugin.Link/bin/Release/net8.0/Jellyfin.Plugin.Link.dll artifacts/Link/
+          cd artifacts
+          zip -r link.zip Link
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jellyfin-plugin-link
+          path: artifacts/link.zip
