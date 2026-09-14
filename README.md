@@ -26,11 +26,31 @@ client are required.
 
 ## Installing
 
-Jellyfin plugins are just a DLL dropped into the server's `plugins`
-directory, so installing this one is a manual copy — there's no plugin
-repository URL to add yet (see note at the end of this section).
+### Via plugin repository (recommended)
 
-### 1. Get `Jellyfin.Plugin.Link.dll`
+1. In the Jellyfin admin dashboard, go to **Dashboard &rsaquo; Plugins &rsaquo;
+   Repositories &rsaquo; Add Repository**.
+2. Add this repository's manifest URL:
+
+   ```
+   https://raw.githubusercontent.com/tehsu/jellyfin-link-plugin/main/manifest.json
+   ```
+
+3. Go to **Dashboard &rsaquo; Plugins &rsaquo; Catalog**, find **Link** under
+   the **General** category, and install it.
+4. Restart Jellyfin, then visit `http://your-server:8096/link`.
+
+Future releases published this way (new tags built by
+[`.github/workflows/build.yml`](.github/workflows/build.yml)) will show up
+as updates in the Catalog automatically, once `manifest.json` is updated
+with their entry.
+
+### Manual install
+
+Jellyfin plugins are just a DLL dropped into the server's `plugins`
+directory, so you can also install it by hand.
+
+#### 1. Get `Jellyfin.Plugin.Link.dll`
 
 Either:
 
@@ -57,7 +77,7 @@ Either:
 > different server version, bump those package versions (and `targetAbi` in
 > `build.yaml`) to match.
 
-### 2. Find your Jellyfin `plugins` folder
+#### 2. Find your Jellyfin `plugins` folder
 
 This is the same folder every other manually-installed Jellyfin plugin goes
 in:
@@ -72,7 +92,7 @@ in:
 If you're unsure, check **Dashboard &rsaquo; General** or your server logs
 at startup — Jellyfin prints the resolved data/plugins paths there.
 
-### 3. Copy the plugin in
+#### 3. Copy the plugin in
 
 Create a `Link` subfolder inside `plugins` and place the DLL there, so you
 end up with:
@@ -83,24 +103,19 @@ plugins/
     Jellyfin.Plugin.Link.dll
 ```
 
-### 4. Restart Jellyfin
+#### 4. Restart Jellyfin
 
-### 5. Confirm it loaded
+#### 5. Confirm it loaded
 
 Go to **Dashboard &rsaquo; Plugins &rsaquo; My Plugins** — you should see
 **Link** listed. Click it to set the page heading and accent color (see
 [Configuration](#configuration) below).
 
-### 6. Visit the page
+#### 6. Visit the page
 
 ```
 http://your-server:8096/link
 ```
-
-> **Note:** this repo doesn't yet publish a `manifest.json` plugin
-> repository feed, so it can't be installed via **Dashboard &rsaquo;
-> Plugins &rsaquo; Repositories &rsaquo; Add Repository** — only the manual
-> steps above. If that's something you'd like, please open an issue.
 
 ## Configuration
 
