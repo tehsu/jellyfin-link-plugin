@@ -26,33 +26,81 @@ client are required.
 
 ## Installing
 
-### From a release
+Jellyfin plugins are just a DLL dropped into the server's `plugins`
+directory, so installing this one is a manual copy — there's no plugin
+repository URL to add yet (see note at the end of this section).
 
-1. Download `link.zip` from the [Releases](../../releases) page (or the
-   `jellyfin-plugin-link` build artifact from Actions).
-2. Extract it into your Jellyfin `plugins` directory so you end up with
-   `plugins/Link/Jellyfin.Plugin.Link.dll`.
-3. Restart Jellyfin.
-4. Visit `http://your-server:8096/Link`.
+### 1. Get `Jellyfin.Plugin.Link.dll`
 
-### Building from source
+Either:
 
-Requires the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
+- **Download a prebuilt DLL** from the `jellyfin-plugin-link` artifact of
+  the latest [Actions build run](../../actions/workflows/build.yml) (or from
+  the [Releases](../../releases) page, once a release has been tagged) — the
+  artifact is `link.zip`, containing a `Link/Jellyfin.Plugin.Link.dll`
+  folder, or
+- **Build it from source** — requires the
+  [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0):
 
-```bash
-dotnet build Jellyfin.Plugin.Link.sln -c Release
-```
+  ```bash
+  git clone https://github.com/tehsu/jellyfin-link-plugin.git
+  cd jellyfin-link-plugin
+  dotnet build Jellyfin.Plugin.Link.sln -c Release
+  ```
 
-The compiled plugin is at
-`Jellyfin.Plugin.Link/bin/Release/net8.0/Jellyfin.Plugin.Link.dll`. Copy it
-into a `Link` folder under your server's `plugins` directory and restart
-Jellyfin.
+  This produces
+  `Jellyfin.Plugin.Link/bin/Release/net8.0/Jellyfin.Plugin.Link.dll`.
 
 > The project targets the `Jellyfin.Controller`/`Jellyfin.Model` NuGet
 > packages pinned to `10.9.11` in
 > `Jellyfin.Plugin.Link/Jellyfin.Plugin.Link.csproj`. If you're running a
 > different server version, bump those package versions (and `targetAbi` in
 > `build.yaml`) to match.
+
+### 2. Find your Jellyfin `plugins` folder
+
+This is the same folder every other manually-installed Jellyfin plugin goes
+in:
+
+| Setup | Typical `plugins` path |
+| --- | --- |
+| Linux (`.deb`/`.rpm` package) | `/var/lib/jellyfin/plugins` |
+| Docker (official `jellyfin/jellyfin` image) | `<your config volume>/plugins` (i.e. `/config/plugins` inside the container) |
+| Windows | `%ProgramData%\Jellyfin\Server\plugins` |
+| macOS / manual install | `~/.local/share/jellyfin/plugins` (or wherever `--datadir` points) |
+
+If you're unsure, check **Dashboard &rsaquo; General** or your server logs
+at startup — Jellyfin prints the resolved data/plugins paths there.
+
+### 3. Copy the plugin in
+
+Create a `Link` subfolder inside `plugins` and place the DLL there, so you
+end up with:
+
+```
+plugins/
+  Link/
+    Jellyfin.Plugin.Link.dll
+```
+
+### 4. Restart Jellyfin
+
+### 5. Confirm it loaded
+
+Go to **Dashboard &rsaquo; Plugins &rsaquo; My Plugins** — you should see
+**Link** listed. Click it to set the page heading and accent color (see
+[Configuration](#configuration) below).
+
+### 6. Visit the page
+
+```
+http://your-server:8096/Link
+```
+
+> **Note:** this repo doesn't yet publish a `manifest.json` plugin
+> repository feed, so it can't be installed via **Dashboard &rsaquo;
+> Plugins &rsaquo; Repositories &rsaquo; Add Repository** — only the manual
+> steps above. If that's something you'd like, please open an issue.
 
 ## Configuration
 
