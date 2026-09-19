@@ -77,6 +77,14 @@ Either:
 > different server version, bump those package versions (and `targetAbi` in
 > `build.yaml`) to match.
 
+> **Releasing:** the plugin version lives in three places that must agree —
+> `<AssemblyVersion>` in the csproj, `version` in `build.yaml`, and the
+> `versions[].version` entry in `manifest.json`. Jellyfin writes the
+> manifest version into the installed plugin's `meta.json` but shows the
+> assembly version in the dashboard, and its enable/disable and uninstall
+> API routes are keyed on the `meta.json` version — so a mismatch makes
+> those buttons fail. CI checks the csproj against `build.yaml`.
+
 #### 2. Find your Jellyfin `plugins` folder
 
 This is the same folder every other manually-installed Jellyfin plugin goes
@@ -141,6 +149,11 @@ The config page also shows the direct URL to share or bookmark.
   form. Upgrade to 1.0.1 or newer if you hit that.
 - If your server is hosted under a base URL (Dashboard > Networking), the
   page lives at `http://your-server:8096/<base-url>/link`.
+- If the dashboard shows the plugin as version **0.0.0.0** and its
+  enable/disable and uninstall buttons do nothing, you're on a build older
+  than 1.0.1 — those builds shipped an unversioned assembly. Install 1.0.1
+  or newer; to clear the stuck entry, stop Jellyfin, delete the old
+  `plugins/Link_<version>` folder, and start it again.
 - Signing in on the `/link` page stores an access token in that browser's
   `localStorage` so repeat visits skip straight to the code entry step.
   "Sign in as someone else" clears it.

@@ -23,6 +23,24 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
+      # Jellyfin keys the enable/disable and uninstall API routes off the
+      # version in a plugin's meta.json, but shows the assembly version in the
+      # dashboard. If they drift, those buttons 404. meta.json comes from the
+      # declared plugin version, so it has to match what gets compiled in.
+      - name: Check version consistency
+        run: |
+          build_version="$(sed -n 's/^version: *"\([0-9.]*\)".*/\1/p' build.yaml | head -1)"
+          csproj_version="$(sed -n 's:.*<AssemblyVersion>\([0-9.]*\)</AssemblyVersion>.*:\1:p' Jellyfin.Plugin.Link/Jellyfin.Plugin.Link.csproj | head -1)"
+          echo "build.yaml: ${build_version:-<none>} / csproj: ${csproj_version:-<none>}"
+          if [ -z "$build_version" ] || [ -z "$csproj_version" ]; then
+            echo "::error::Could not read the plugin version from build.yaml or the csproj."
+            exit 1
+          fi
+          if [ "$build_version" != "$csproj_version" ]; then
+            echo "::error::build.yaml declares $build_version but the assembly is built as $csproj_version. These must match or the dashboard's enable/disable buttons will 404."
+            exit 1
+          fi
+
       - name: Restore
         run: dotnet restore Jellyfin.Plugin.Link.sln
 
