@@ -2,9 +2,17 @@
   "use strict";
 
   var CODE_LENGTH = 6;
+  var CLIENT_NAME = "Jellyfin Link";
+  var CLIENT_VERSION = "1.0.1";
+  var DEVICE_NAME = "Web Browser";
   var STORAGE_DEVICE_ID = "jf-link-device-id";
   var STORAGE_TOKEN = "jf-link-access-token";
   var STORAGE_USERNAME = "jf-link-username";
+
+  // The server root this page is hosted under. The page is served at
+  // "<base>/link/", so one level up is the API root -- this keeps the page
+  // working on servers that set a base URL (Dashboard > Networking).
+  var API_ROOT = new URL("../", document.baseURI).href.replace(/\/+$/, "");
 
   var els = {
     serverName: document.getElementById("server-name"),
@@ -34,6 +42,10 @@
     step.classList.remove("hidden");
   }
 
+  function apiUrl(path) {
+    return API_ROOT + path;
+  }
+
   function getDeviceId() {
     var id = localStorage.getItem(STORAGE_DEVICE_ID);
     if (!id) {
@@ -51,23 +63,33 @@
     });
   }
 
-  function clientAuthHeader() {
-    return 'MediaBrowser Client="Jellyfin Link", Device="Web Browser", DeviceId="' +
-      getDeviceId() + '", Version="1.0.0"';
+  // Jellyfin expects the "MediaBrowser" scheme on the standard Authorization
+  // header. The legacy X-Emby-Authorization / X-Emby-Token headers are ignored
+  // unless the server explicitly re-enables legacy authorization, so the token
+  // travels in this header too.
+  function authHeader() {
+    var parts = [
+      'Client="' + encodeURIComponent(CLIENT_NAME) + '"',
+      'Device="' + encodeURIComponent(DEVICE_NAME) + '"',
+      'DeviceId="' + encodeURIComponent(getDeviceId()) + '"',
+      'Version="' + encodeURIComponent(CLIENT_VERSION) + '"'
+    ];
+
+    var token = localStorage.getItem(STORAGE_TOKEN);
+    if (token) {
+      parts.push('Token="' + encodeURIComponent(token) + '"');
+    }
+
+    return "MediaBrowser " + parts.join(", ");
   }
 
   function apiFetch(path, options) {
     options = options || {};
     var headers = Object.assign({}, options.headers || {}, {
-      "X-Emby-Authorization": clientAuthHeader()
+      Authorization: authHeader()
     });
 
-    var token = localStorage.getItem(STORAGE_TOKEN);
-    if (token) {
-      headers["X-Emby-Token"] = token;
-    }
-
-    return fetch(path, Object.assign({}, options, { headers: headers }));
+    return fetch(apiUrl(path), Object.assign({}, options, { headers: headers }));
   }
 
   function setBusy(button, busy) {
@@ -76,7 +98,7 @@
   }
 
   function loadDisplayConfig() {
-    return fetch("/link/config")
+    return fetch(apiUrl("/link/config"))
       .then(function (res) { return res.ok ? res.json() : {}; })
       .catch(function () { return {}; })
       .then(function (config) {
@@ -90,7 +112,7 @@
   }
 
   function loadServerName() {
-    return fetch("/System/Info/Public")
+    return fetch(apiUrl("/System/Info/Public"))
       .then(function (res) { return res.ok ? res.json() : null; })
       .then(function (info) {
         if (info && info.ServerName) {
@@ -101,7 +123,7 @@
   }
 
   function isQuickConnectEnabled() {
-    return fetch("/QuickConnect/Enabled")
+    return fetch(apiUrl("/QuickConnect/Enabled"))
       .then(function (res) { return res.ok ? res.json() : false; })
       .catch(function () { return false; });
   }
@@ -120,6 +142,20 @@
   function clearSession() {
     localStorage.removeItem(STORAGE_TOKEN);
     localStorage.removeItem(STORAGE_USERNAME);
+  }
+
+  function signInErrorFor(status) {
+    if (status === 401) {
+      return "Incorrect username or password.";
+    }
+    if (status === 400) {
+      return "The server rejected the sign-in request (HTTP 400). " +
+        "Check the Jellyfin server log for details.";
+    }
+    if (status === 403) {
+      return "This account is not allowed to sign in from this device.";
+    }
+    return "Sign in failed (HTTP " + status + ").";
   }
 
   function buildCodeInputs() {
@@ -223,7 +259,7 @@
     })
       .then(function (res) {
         if (!res.ok) {
-          throw new Error(res.status === 401 ? "Incorrect username or password." : "Sign in failed.");
+          throw new Error(signInErrorFor(res.status));
         }
         return res.json();
       })
@@ -261,6 +297,9 @@
           clearSession();
           showStep(els.stepSignin);
           throw new Error("Your session expired. Please sign in again.");
+        }
+        if (res.status === 403) {
+          throw new Error("This account is not allowed to authorize devices.");
         }
         if (!res.ok) {
           throw new Error("That code is invalid or has expired.");

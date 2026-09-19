@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net.Mime;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +27,15 @@ public class LinkController : ControllerBase
     [Produces("text/html")]
     public ActionResult Index()
     {
-        return GetEmbeddedResource("link.html", "text/html");
+        // The page loads its assets and talks to the server API relative to this
+        // base, so it keeps working when the server is hosted under a base URL
+        // (Dashboard > Networking) and whether or not /link has a trailing slash.
+        var baseHref = $"{Request.PathBase}/link/";
+
+        using var reader = new StreamReader(GetEmbeddedResourceStream("link.html"));
+        var html = reader.ReadToEnd().Replace("__LINK_BASE__", baseHref, StringComparison.Ordinal);
+
+        return Content(html, "text/html");
     }
 
     /// <summary>
@@ -68,12 +77,16 @@ public class LinkController : ControllerBase
         };
     }
 
-    private FileStreamResult GetEmbeddedResource(string fileName, string contentType)
+    private static Stream GetEmbeddedResourceStream(string fileName)
     {
         var resourcePath = $"Jellyfin.Plugin.Link.Web.{fileName}";
-        var stream = _assembly.GetManifestResourceStream(resourcePath)
-            ?? throw new InvalidOperationException($"Embedded resource '{resourcePath}' not found.");
 
-        return File(stream, contentType);
+        return _assembly.GetManifestResourceStream(resourcePath)
+            ?? throw new InvalidOperationException($"Embedded resource '{resourcePath}' not found.");
+    }
+
+    private FileStreamResult GetEmbeddedResource(string fileName, string contentType)
+    {
+        return File(GetEmbeddedResourceStream(fileName), contentType);
     }
 }
