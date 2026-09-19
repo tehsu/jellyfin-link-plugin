@@ -1,7 +1,7 @@
 ---
 name: "Link"
 guid: "3cf8ee31-4bee-4afa-b838-b8df49dfeb90"
-version: "1.0.0.0"
+version: "1.0.1.0"
 targetAbi: "10.9.0.0"
 framework: "net8.0"
 owner: "tehsu"
@@ -15,5 +15,11 @@ category: "General"
 artifacts:
   - "Jellyfin.Plugin.Link.dll"
 changelog: >
-  - Initial release: standalone /link page, Quick Connect authorization,
-    and an admin config page for branding.
+  - 1.0.1.0: Fix "Sign in failed" on servers with legacy authorization
+    disabled (the default since Jellyfin 12) by authenticating with the
+    standard Authorization: MediaBrowser header instead of the removed
+    X-Emby-Authorization/X-Emby-Token headers. Also honor a configured
+    server base URL.
+
+  - 1.0.0.0: Initial release: standalone /link page, Quick Connect
+    authorization, and an admin config page for branding.

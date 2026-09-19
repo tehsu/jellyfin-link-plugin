@@ -133,6 +133,14 @@ The config page also shows the direct URL to share or bookmark.
 - The page talks directly to the server's own API from the browser
   (`/Users/AuthenticateByName`, `/Users/Me`, `/QuickConnect/*`,
   `/System/Info/Public`) — there's no separate backend to configure.
+- Requests are authenticated with Jellyfin's standard
+  `Authorization: MediaBrowser ...` header. Plugin versions before 1.0.1
+  used the legacy `X-Emby-Authorization`/`X-Emby-Token` headers, which
+  servers ignore once legacy authorization is off (the default since
+  Jellyfin 12) — that showed up as **"Sign in failed"** on the sign-in
+  form. Upgrade to 1.0.1 or newer if you hit that.
+- If your server is hosted under a base URL (Dashboard > Networking), the
+  page lives at `http://your-server:8096/<base-url>/link`.
 - Signing in on the `/link` page stores an access token in that browser's
   `localStorage` so repeat visits skip straight to the code entry step.
   "Sign in as someone else" clears it.

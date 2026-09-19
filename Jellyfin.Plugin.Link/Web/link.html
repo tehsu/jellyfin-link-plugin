@@ -4,7 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Link Your Device</title>
-<link rel="stylesheet" href="/link/link.css" />
+<!-- Rewritten by LinkController so the page works under a server base URL. -->
+<base href="__LINK_BASE__" />
+<link rel="stylesheet" href="link.css" />
 </head>
 <body>
   <main class="link-page">
@@ -74,6 +76,6 @@
       </section>
     </div>
   </main>
-  <script src="/link/link.js"></script>
+  <script src="link.js"></script>
 </body>
 </html>
