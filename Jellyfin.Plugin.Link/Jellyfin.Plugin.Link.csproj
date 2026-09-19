@@ -6,7 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Jellyfin.Plugin.Link</AssemblyName>
     <RootNamespace>Jellyfin.Plugin.Link</RootNamespace>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <!-- Jellyfin reports this assembly version in the dashboard and keys the
+         enable/disable/uninstall API routes off the version in the plugin's
+         meta.json. The two must match, so keep this in step with the version
+         in build.yaml and manifest.json. CI overrides it from build.yaml. -->
+    <Version>1.0.1.0</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
     <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>

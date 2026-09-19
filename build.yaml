@@ -18,7 +18,9 @@ changelog: >
   - 1.0.1.0: Fix "Sign in failed" on servers with legacy authorization
     disabled (the default since Jellyfin 12) by authenticating with the
     standard Authorization: MediaBrowser header instead of the removed
-    X-Emby-Authorization/X-Emby-Token headers. Also honor a configured
+    X-Emby-Authorization/X-Emby-Token headers. Stamp a real assembly
+    version so the dashboard's enable/disable and uninstall buttons work
+    (the plugin previously reported 0.0.0.0). Also honor a configured
     server base URL.
 
   - 1.0.0.0: Initial release: standalone /link page, Quick Connect
